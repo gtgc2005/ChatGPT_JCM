@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  app:
+    image: gtgc2005/ChatGPT_JCM # 总是使用latest,更新时重新pull该tag镜像即可
+    ports:
+      - 80:80
+    environment:
+      VUE_APP_OPENAI_API_KEY: ""
