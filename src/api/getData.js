@@ -1,5 +1,7 @@
 import base from './index'
 import { AI_HEAD_IMG_URL } from '../store/mutation-types'
+import { generateUUID } from "@/util/util";
+
 let axios = base.axios
 let baseUrl = base.baseUrl
 
@@ -59,6 +61,7 @@ function produceModelDesc(model) {
     return desc
   }
 }
+
 
 // 获取模型列表
 export const getModels = token => {
@@ -182,8 +185,6 @@ export const createFineTune = (formData, token) => {
     },
     data: formData
   }).then(res => {
-    console.log("重要的")
-    console.log(res)
     return res.data;
   })
 }
@@ -207,10 +208,12 @@ export const getFineTunesList = token => {
         name: fineTunes.fine_tuned_model,
         detail: "基于"+fineTunes.model+"微调创建的模型",
         lastMsg: "基于"+fineTunes.model+"微调创建的模型",
-        id: fineTunes.fine_tuned_model,
+        id: fineTunes.fine_tuned_model?fineTunes.fine_tuned_model:generateUUID(),
         headImg: AI_HEAD_IMG_URL,
         showHeadImg: true,
-        createTime: fineTunes.created_at
+        createTime: fineTunes.created_at,
+        fineTunesId:fineTunes.id,
+        fineTunesStatus:fineTunes.status
       }
       fineTunesObjs.push(fineTunesObj)
     });
@@ -219,16 +222,15 @@ export const getFineTunesList = token => {
 }
 
 
-// 列出微调
+// 检索微调信息
 export const retrieveFineTune = (fineTuneId, token) => {
   return axios({
     method: 'get',
     baseURL: `${baseUrl}/v1/fine-tunes/` + fineTuneId,
     headers: {
       'Authorization': 'Bearer ' + token,
-      'Content-Type': 'multipart/form-data"'
-    },
-    data: fineTuneId
+      'Content-Type': 'application/json'
+    }
   }).then(res => {
     return res.data;
   })
@@ -243,15 +245,14 @@ export const cancelFineTune = (fineTuneId, token) => {
     baseURL: `${baseUrl}/v1/fine-tunes/` + fineTuneId + '/cancel',
     headers: {
       'Authorization': 'Bearer ' + token,
-      'Content-Type': 'multipart/form-data"'
-    },
-    data: fineTuneId
+      'Content-Type': 'application/json'
+    }
   }).then(res => {
     return res.data;
   })
 }
 
-// 取消微调
+// 获取微调事件列表
 export const getFineTuneEventsList = (fineTuneId, token) => {
   return axios({
     method: 'get',
@@ -266,16 +267,15 @@ export const getFineTuneEventsList = (fineTuneId, token) => {
   })
 }
 
-// 取消微调
+// 删除微调模型
 export const deleteFineTuneModel = (model, token) => {
   return axios({
     method: 'delete',
     baseURL: `${baseUrl}/v1/models/` + model,
     headers: {
       'Authorization': 'Bearer ' + token,
-      'Content-Type': 'multipart/form-data'
-    },
-    data: model
+      'Content-Type': 'application/json'
+    }
   }).then(res => {
     return res.data;
   })
@@ -298,14 +298,29 @@ export const getFilesList = token => {
       let fileObj = {
         img: "",
         name: file.filename,
-        detail: "文件ID是:"+file.id+",文件大小是:"+file.bytes/1024/1024+"MB",
-        lastMsg: "文件ID是:"+file.id+",文件大小是:"+file.bytes/1024/1024+"MB",
+        detail: "文件ID是:"+file.id+",文件大小是:"+(file.bytes/1024/1024).toFixed(2)+"MB",
+        lastMsg: "文件ID是:"+file.id+",文件大小是:"+(file.bytes/1024/1024).toFixed(2)+"MB",
         id: file.filename,
         createTime: file.created_at,
+        fileId:file.id
       }
       fileObjs.push(fileObj)
     });
     return fileObjs.sort((a, b) => b.createTime - a.createTime);
+  })
+}
+
+// 删除文件
+export const deleteFile = (file, token) => {
+  return axios({
+    method: 'delete',
+    baseURL: `${baseUrl}/v1/files/` + file,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    }
+  }).then(res => {
+    return res.data;
   })
 }
 
@@ -322,7 +337,55 @@ export const uploadFile = (formData, token) => {
   }).then(res => {
     console.log("文件上传成功")
     console.log(res)
-    return res.data.data;
+    return res.data;
+  })
+}
+
+
+// 检索文件
+export const retrieveFile = (file, token) => {
+  return axios({
+    method: 'get',
+    baseURL: `${baseUrl}/v1/files/` + file,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    }
+  }).then(res => {
+    return res.data;
+  })
+}
+
+// 检索文件内容
+export const retrieveFileContent = (file, token) => {
+
+  // return axios({
+  //   method: 'get',
+  //   baseURL: `${baseUrl}v1/files/`+file+`/content`,
+  //   headers: {
+  //     'Authorization': 'Bearer ' + token
+  //   }
+  // }).then(response => {
+  //   const writer = fs.createWriteStream('./file.txt')
+  //   response.data.pipe(writer)
+  // })
+}
+
+
+
+// 检索文件内容
+export const createEmbeddings = (params, token) => {
+  return axios({
+    method: 'post',
+    baseURL: `${baseUrl}/v1/embeddings`,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    },
+    data:params
+  }).then(response => {
+    console.log(response)
+    return response.data
   })
 }
 

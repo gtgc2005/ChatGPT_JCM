@@ -43,4 +43,9 @@ export default {
   position:absolute;
       
 }
+
+
+::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
+}
 </style>
