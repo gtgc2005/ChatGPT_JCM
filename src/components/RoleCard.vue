@@ -1,10 +1,9 @@
 <template>
-  <div class="person-card" :class="{ activeCard: personInfo.id == pcCurrent }">
+  <div class="role-card" :class="{ activeCard: roleInfo.act == prCurrent }">
     <div class="info">
-      <HeadPortrait :imgUrl="personInfo.headImg" v-show="personInfo.showHeadImg" />
       <div class="info-detail">
-        <div class="name">{{ personInfo.name ? personInfo.name.slice(0, 20) : (personInfo.fineTunesStatus=="pending" ? $t('person_card.train') : $t('person_card.cancel'))}}</div>
-        <div class="detail">{{ personInfo.lastMsg.slice(0, 22) }}</div>
+        <div class="name">{{ roleInfo.act  }}</div>
+        <div class="detail">{{ roleInfo.prompt.slice(0, 50) }}</div>
       </div>
     </div>
   </div>
@@ -15,10 +14,10 @@ import HeadPortrait from "./HeadPortrait.vue";
 
 export default {
   props: {
-    personInfo: {
+    roleInfo: {
       default: {},
     },
-    pcCurrent: {
+    prCurrent: {
       default: '',
     },
   },
@@ -37,14 +36,14 @@ export default {
   },
   methods: {
     isActive() {
-      this.current = this.pcCurrent;
+      this.current = this.prCurrent;
     }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.person-card {
+.role-card {
   width: 100%;
   height: 80px;
   border-radius: 10px;

@@ -1,46 +1,37 @@
 <template>
   <div class="chatHome">
-    <div class="chatLeft" style="width:22%" v-show="showPersonList">
+    <div class="chatLeft" style="width:20%" v-show="showPersonList">
       <div class="title" style="text-align: center;">
-        <svg t="1679634305168" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-          p-id="3634" width="40" height="40">
-          <path
-            d="M512 960.4c-23.2 0-46.5-6-67.2-17.9L173.5 785.8c-41.4-23.9-67.2-68.5-67.2-116.3V356.1c0-47.8 25.7-92.4 67.2-116.3L444.8 83.1c41.4-23.9 92.9-23.9 134.3 0l271.4 156.7c41.4 23.9 67.2 68.5 67.2 116.3v313.4c0 47.8-25.7 92.4-67.2 116.3L579.2 942.5c-20.7 11.9-44 17.9-67.2 17.9z m0-805.6c-7.7 0-15.4 2-22.3 6L218.3 317.5c-13.8 7.9-22.3 22.7-22.3 38.6v313.4c0 15.9 8.5 30.7 22.3 38.6l271.4 156.7c13.8 7.9 30.8 7.9 44.6 0l271.4-156.7c13.8-7.9 22.3-22.7 22.3-38.6V356.1c0-15.9-8.5-30.7-22.3-38.6L534.3 160.8c-6.9-4-14.6-6-22.3-6z"
-            fill="#ffffff" p-id="3635"></path>
-          <path
-            d="M514 559c-7.8 0-15.5-2-22.4-6L270.9 425.4c-21.5-12.4-28.8-39.8-16.4-61.3 12.4-21.5 39.8-28.8 61.3-16.4l198.1 114.5 189.7-110.9c21.4-12.5 48.9-5.3 61.4 16.1 12.5 21.4 5.3 48.9-16.1 61.4l-212.2 124c-7 4.1-14.9 6.2-22.7 6.2z"
-            fill="#ffffff" p-id="3636"></path>
-          <path
-            d="M512 805.8c-24.8 0-44.9-20.1-44.9-44.9V514.1c0-24.8 20.1-44.9 44.9-44.9s44.9 20.1 44.9 44.9V761c0 24.7-20.1 44.8-44.9 44.8z"
-            fill="#ffffff" p-id="3637"></path>
-        </svg>
-        <h2>OpenAI Manage</h2>
+        <h2>OpenAI Manager</h2>
       </div>
       <div class="online-person" style="margin-top: 5%;">
         <el-row :gutter="24">
           <el-col :span="6">
             <div class="setting" style="text-align: center;">
-              <span class="" @click="sessionClick" :class="{ whiteText: cutSetting === 1 }">会话</span>
+              <span class="" @click="sessionClick" :class="{ whiteText: cutSetting === 1 }">{{ $t('session.title')
+              }}</span>
             </div>
           </el-col>
           <el-col :span="6">
             <div class="setting" style="text-align: center;">
-              <span class="" @click="modelClick" :class="{ whiteText: cutSetting === 0 }">模型</span>
+              <span class="" @click="modelClick" :class="{ whiteText: cutSetting === 0 }">{{ $t('model.title') }}</span>
             </div>
           </el-col>
           <el-col :span="6">
             <div class="setting" style="text-align: center;">
-              <span class="" @click="fineTuningClick" :class="{ whiteText: cutSetting === 2 }">微调</span>
+              <span class="" @click="fineTuningClick" :class="{ whiteText: cutSetting === 2 }">{{
+                $t('slightly.title.whole') }}</span>
             </div>
           </el-col>
           <el-col :span="6">
             <div class="setting" style="text-align: center;">
-              <span class="" @click="fileClick" :class="{ whiteText: cutSetting === 3 }">文件</span>
+              <span class="" @click="fileClick" :class="{ whiteText: cutSetting === 3 }">{{ $t('file.title') }}</span>
             </div>
           </el-col>
         </el-row>
         <div v-show="cutSetting == 0">
-          <input class="inputs" v-model="modelSearch" style=" margin-top: 10px;" placeholder="模型名称"/>
+          <input class="inputs" v-model="modelSearch" style=" margin-top: 10px;"
+            :placeholder="$t('placeholder.model_name')" />
           <div class="s-wrapper">
             <div class="personList" v-for="personInfo in personList" :key="personInfo.id"
               @click="clickPerson(personInfo)">
@@ -50,7 +41,8 @@
         </div>
 
         <div v-show="cutSetting == 1">
-          <input class="inputs" v-model="sessionSearch" style=" margin-top: 10px;" placeholder="会话名称"/>
+          <input class="inputs" v-model="sessionSearch" style=" margin-top: 10px;"
+            :placeholder="$t('placeholder.session_name')" />
           <div class="s-wrapper">
             <div v-for="sessionInfo in sessionList" :key="sessionInfo.id" @click="clickSession(sessionInfo)">
               <Session :sessionInfo="sessionInfo" :pcCurrent="sessionCurrent"></Session>
@@ -59,7 +51,8 @@
         </div>
 
         <div v-show="cutSetting == 2">
-          <input class="inputs" v-model="fineTuningSearch" style=" margin-top: 10px;" placeholder="微调模型名称" />
+          <input class="inputs" v-model="fineTuningSearch" style=" margin-top: 10px;"
+            :placeholder="$t('placeholder.slightly_name')" />
           <div class="s-wrapper">
             <div class="personList" v-for="fineTuningInfo in fineTuningList" :key="fineTuningInfo.id"
               @click="clickFineTuning(fineTuningInfo)">
@@ -69,8 +62,9 @@
         </div>
 
         <div v-show="cutSetting == 3">
-          <input class="inputs" v-model="fileSearch" style=" margin-top: 10px;" placeholder="文件名称" />
-         
+          <input class="inputs" v-model="fileSearch" style=" margin-top: 10px;"
+            :placeholder="$t('placeholder.file_name')" />
+
           <div class="s-wrapper">
             <div class="personList" v-for="(fileInfo, index) in fileList" :key="index" @click="clickFile(fileInfo)">
               <File :fileInfo="fileInfo" :pcCurrent="fiCurrent"></File>
@@ -102,6 +96,7 @@
             fill="#2867CE" p-id="7553"></path>
         </svg>
       </div>
+
       <div class="top-right" @click="toggleRight">
         <svg t="1679366707602" class="icon" v-show="!showSetupList" viewBox="0 0 1024 1024" version="1.1"
           xmlns="http://www.w3.org/2000/svg" p-id="7551" width="30" height="30">
@@ -122,7 +117,8 @@
             fill="#2867CE" p-id="5766"></path>
         </svg>
       </div>
-      <div v-if="showChatWindow">
+
+      <div v-if="showChatWindow" v-show="showMainContent">
         <ChatWindow ref="chatWindow" :frinedInfo="chatWindowInfo" :settingInfo="SettingInfo" :storeStatu="storeStatus"
           @personCardSort="personCardSort"></ChatWindow>
       </div>
@@ -135,84 +131,135 @@
         </svg>
       </div>
     </div>
+
     <div class="chatLeft" v-show="showSetupList">
 
       <el-card shadow="hover" id="jianbian" style="line-height: 120%;text-align: center;">
-        总余额：${{ this.moneryInfo.totalGranted | numFilterReservedTwo }}<br />
-        可用余额：${{ this.moneryInfo.totalAvailable | numFilterReservedSix }}<br />
-        消耗余额：${{ moneryInfo.totalUsed | numFilterReservedSix }}<br />
+        <div>
+          <input class="inputs" v-model="SettingInfo.KeyMsg" :placeholder="$t('placeholder.openai_key')" type="password"
+            auto-complete="new-password" autocomplete="new-password"
+            style="width: 100%; margin-left: 0px;margin-right: 0px;" />
+        </div>
       </el-card>
 
       <div class="online-person">
         <el-row :gutter="20">
-          <el-col :span="6"><span class="setting" @click="SettingStatus = 0"
-              :class="{ active: SettingStatus === 0 }">对话</span></el-col>
-          <el-col :span="6"><span class="setting" @click="SettingStatus = 1"
-              :class="{ active: SettingStatus === 1 }">图片</span></el-col>
-          <el-col :span="6"><span class="setting" @click="SettingStatus = 2"
-              :class="{ active: SettingStatus === 2 }">音频</span></el-col>
-          <el-col :span="6"><span class="setting" @click="SettingStatus = 3"
-              :class="{ active: SettingStatus === 3 }">微调</span></el-col>
-          <el-col :span="6"><span class="setting" @click="SettingStatus = 4"
-              :class="{ active: SettingStatus === 4 }">文件</span></el-col>
-          <el-col :span="6"><span class="setting" @click="SettingStatus = 5"
-              :class="{ active: SettingStatus === 5 }">会话</span></el-col>
-          <el-col :span="6"><span class="setting" @click="SettingStatus = 6"
-              :class="{ active: SettingStatus === 6 }">识图</span></el-col>
-          <el-col :span="6"><span class="setting" @click="SettingStatus = 7"
-              :class="{ active: SettingStatus === 7 }">设置</span></el-col>
+          <el-col :span="6" v-for="(setting, index) in getSettings" :key="index"> <span class="setting"
+              @click="SettingStatus = index" :class="{ active: SettingStatus === index }"> {{ setting.name }} </span>
+          </el-col>
         </el-row>
 
-        <div class="s-wrapper" style="height: 68vh;">
+        <div class="s-wrapper" style="height: 75vh;">
 
-          <div>
-            <input class="inputs" v-model="SettingInfo.KeyMsg" placeholder="请输入OpenAI KEY" type="password"
-              style="width: 100%; margin-left: 0px;margin-right: 0px;" />
-          </div>
+
           <!--对话设置-->
           <el-collapse-transition>
             <div v-show="SettingStatus == 0">
-              <div class="block">
-                <el-tooltip class="item" effect="dark" content="指定要生成的最大单词数，不能超过2048。" placement="top">
-                  <span class="demonstration" style="">max_tokens</span>
+
+
+              <div class="block" v-show="SettingInfo.openNet">
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.online')" placement="top">
+                    <span class="demonstration">{{ $t('model.online_title') }}</span>
+                  </el-tooltip>
+                  <el-switch v-model="SettingInfo.openNet" :width="defaulWidth" style="margin-left: 15%;"></el-switch>
+                </div>
+                <el-tooltip class="item" effect="dark" :content="$t('model.max_results_title')" placement="top">
+                  <span class="demonstration" style="">{{ $t('model.max_results') }}</span>
                 </el-tooltip>
 
-                <el-slider class="astrict" v-model="SettingInfo.MaxTokens" :step="1" :min="0" :max="2048"></el-slider>
+                <el-slider class="astrict" v-model="SettingInfo.max_results" :step="1" :min="0" :max="6"></el-slider>
               </div>
 
-              <div class="block">
-                <el-tooltip class="item" effect="dark" content="指定生成文本的随机性，范围是0到2，越高表示越多样化和创造性，越低表示越保守和确定性。"
-                  placement="top">
-                  <span class="demonstration">temperature(0~2)</span>
-                </el-tooltip>
+              <div v-show="!SettingInfo.openNet">
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.suffix')" placement="top">
+                    <span class="demonstration">{{ $t('model.suffix_title') }}</span>
+                  </el-tooltip>
 
-                <el-slider class="astrict" v-model="SettingInfo.Temperature" :step="0.1" :min="0" :max="2"></el-slider>
-              </div>
+                  <input class="weitiao" v-model="SettingInfo.chat.suffix" :placeholder="$t('placeholder.suffix')" />
+                </div>
 
-              <div class="block">
-                <el-tooltip class="item" effect="dark" content="指定在每个步骤中保留概率最高的单词的比例，范围是0到1，与temperature类似，但更加灵活和稳健。"
-                  placement="top">
-                  <span class="demonstration" s>top_p(0~1)</span>
-                </el-tooltip>
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.stop')" placement="top">
+                    <span class="demonstration" s>{{ $t('model.stop_title') }}</span>
+                  </el-tooltip>
 
-                <el-slider class="astrict" v-model="SettingInfo.TopP" :step="0.1" :min="0" :max="1"></el-slider>
-              </div>
+                  <input class="weitiao" v-model="SettingInfo.chat.stop" :placeholder="$t('placeholder.stop')" />
+                </div>
 
-              <div class="block">
-                <el-tooltip class="item" effect="dark" content="指定降低重复单词出现概率的程度，范围是0到1，越高表示越避免重复。" placement="top">
-                  <span class="demonstration">frequency_penalty(-2~2)</span>
-                </el-tooltip>
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.frequency_penalty')" placement="top">
+                    <span class="demonstration">{{ $t('model.frequency_penalty_title') }}</span>
+                  </el-tooltip>
 
-                <el-slider class="astrict" v-model="SettingInfo.FrequencyPenalty" :step="0.1" :min="-2"
-                  :max="2"></el-slider>
-              </div>
+                  <el-slider class="astrict" v-model="SettingInfo.chat.FrequencyPenalty" :step="0.1" :min="-2"
+                    :max="2"></el-slider>
+                </div>
 
-              <div class="block">
-                <el-tooltip class="item" effect="dark" content="指定降低重复话题出现概率的程度，范围是0到1，越高表示越避免重复。" placement="top">
-                  <span class="demonstration">presence_penalty(-2~2)</span>
-                </el-tooltip>
-                <el-slider class="astrict" v-model="SettingInfo.PresencePenalty" :step="0.1" :min="-2"
-                  :max="2"></el-slider>
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.presence_penalty')" placement="top">
+                    <span class="demonstration">{{ $t('model.presence_penalty_title') }}</span>
+                  </el-tooltip>
+                  <el-slider class="astrict" v-model="SettingInfo.chat.PresencePenalty" :step="0.1" :min="-2"
+                    :max="2"></el-slider>
+                </div>
+
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.max_tokens')" placement="top">
+                    <span class="demonstration" style="">{{ $t('model.max_tokens_title') }}</span>
+                  </el-tooltip>
+
+                  <el-slider class="astrict" v-model="SettingInfo.chat.MaxTokens" :step="1" :min="0"
+                    :max="2048"></el-slider>
+                </div>
+
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.temperature')" placement="top">
+                    <span class="demonstration">{{ $t('model.temperature_title') }}</span>
+                  </el-tooltip>
+
+                  <el-slider class="astrict" v-model="SettingInfo.chat.Temperature" :step="0.1" :min="0"
+                    :max="2"></el-slider>
+                </div>
+
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.top_p')" placement="top">
+                    <span class="demonstration" s>{{ $t('model.top_p_title') }}</span>
+                  </el-tooltip>
+
+                  <el-slider class="astrict" v-model="SettingInfo.chat.TopP" :step="0.1" :min="0" :max="1"></el-slider>
+                </div>
+
+                <!-- <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.n')" placement="top">
+                    <span class="demonstration" s>{{$t('model.n_title')}}</span>
+                  </el-tooltip>
+
+                  <input class="weitiao" v-model="SettingInfo.chat.n" :placeholder="$t('placeholder.response_count')" type="number" />
+                </div> -->
+
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.stream')" placement="top">
+                    <span class="demonstration">{{ $t('model.stream_title') }}</span>
+                  </el-tooltip>
+                  <el-switch v-model="SettingInfo.chat.stream" :width="defaulWidth" style="margin-left: 15%;"></el-switch>
+                </div>
+
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.echo')" placement="top">
+                    <span class="demonstration">{{ $t('model.echo_title') }}</span>
+                  </el-tooltip>
+                  <el-switch v-model="SettingInfo.chat.echo" :width="defaulWidth" style="margin-left: 22%;"></el-switch>
+                </div>
+
+                <div class="block">
+                  <el-tooltip class="item" effect="dark" :content="$t('model.online')" placement="top">
+                    <span class="demonstration">{{ $t('model.online_title') }}</span>
+                  </el-tooltip>
+                  <el-switch v-model="SettingInfo.openNet" :width="defaulWidth" style="margin-left: 15%;"></el-switch>
+                </div>
+
               </div>
               <!-- <div class="block">
                 <el-tooltip class="item" effect="dark" content="开启读文模式" placement="top">
@@ -230,24 +277,24 @@
             <div v-show="SettingStatus == 1">
 
               <div class="block">
-                <el-tooltip class="item" effect="dark" content="打开之后聊天发送的内容为描述图片的信息" placement="top">
-                  <span class="demonstration">产图模式</span>
+                <el-tooltip class="item" effect="dark" :content="$t('image.production_title')" placement="top">
+                  <span class="demonstration">{{ $t('image.production') }}</span>
                 </el-tooltip>
                 <el-switch v-model="SettingInfo.openProductionPicture" :width="defaulWidth"
                   style="margin-left: 15%;"></el-switch>
               </div>
 
               <div class="block">
-                <el-tooltip class="item" effect="dark" content="打开之后先上传图片，然后再输入提示词进行修改。" placement="top">
-                  <span class="demonstration">改图模式</span>
+                <el-tooltip class="item" effect="dark" :content="$t('image.change_title')" placement="top">
+                  <span class="demonstration">{{ $t('image.change') }}</span>
                 </el-tooltip>
                 <el-switch v-model="SettingInfo.openChangePicture" :width="defaulWidth"
                   style="margin-left: 15%;"></el-switch>
               </div>
 
               <div class="block">
-                <el-tooltip class="item" effect="dark" content="图片的大小。" placement="top">
-                  <span class="demonstration">size</span>
+                <el-tooltip class="item" effect="dark" :content="$t('image.size_title')" placement="top">
+                  <span class="demonstration">{{ $t('image.size') }}</span>
                 </el-tooltip>
                 <div>
                   <el-select v-model="SettingInfo.size" placeholder="请选择" style="margin-top: 10px;">
@@ -258,8 +305,8 @@
               </div>
 
               <div class="block">
-                <el-tooltip class="item" effect="dark" content="生成图片的数量。" placement="top">
-                  <span class="demonstration">n(1~10)</span>
+                <el-tooltip class="item" effect="dark" :content="$t('image.count_title')" placement="top">
+                  <span class="demonstration">{{ $t('image.count') }}</span>
                 </el-tooltip>
                 <el-slider class="astrict" v-model="SettingInfo.n" :step="1" :min="-1" :max="10"></el-slider>
               </div>
@@ -274,16 +321,16 @@
             <div v-show="SettingStatus == 2">
 
               <div class="block">
-                <el-tooltip class="item" effect="dark" content="语音转文字" placement="top">
-                  <span class="demonstration">语音转文字</span>
+                <el-tooltip class="item" effect="dark" :content="$t('audio.to_text_title')" placement="top">
+                  <span class="demonstration">{{ $t('audio.to_text') }}</span>
                 </el-tooltip>
                 <el-switch v-model="SettingInfo.translateEnglish" :width="defaulWidth"
                   style="margin-left: 15%;"></el-switch>
               </div>
 
               <div class="block">
-                <el-tooltip class="item" effect="dark" content="将一个或多个来源语言的语音或音频文件翻译成目标语言" placement="top">
-                  <span class="demonstration">language</span>
+                <el-tooltip class="item" effect="dark" :content="$t('audio.language_title')" placement="top">
+                  <span class="demonstration">{{ $t('audio.language') }}</span>
                 </el-tooltip>
                 <div>
                   <el-select v-model="SettingInfo.language" placeholder="请选择" style="margin-top: 10px;">
@@ -295,9 +342,8 @@
 
 
               <div class="block">
-                <el-tooltip class="item" effect="dark" content="指定语音识别的随机性，范围是0到1，越高表示越多样化和创造性，越低表示越保守和确定性。"
-                  placement="top">
-                  <span class="demonstration">temperature(0~1)</span>
+                <el-tooltip class="item" effect="dark" :content="$t('audio.temperature_title')" placement="top">
+                  <span class="demonstration">{{ $t('audio.temperature') }}</span>
                 </el-tooltip>
 
                 <el-slider class="astrict" v-model="SettingInfo.TemperatureAudio" :step="0.1" :min="0"
@@ -313,89 +359,89 @@
           <el-collapse-transition>
             <div v-show="SettingStatus == 3">
               <div class="fineTune boxinput" @click="retrieveFine" style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                检索微调
+                {{ $t('slightly.retrieveFineTuning') }}
               </div>
               <div class="fineTune boxinput" @click="cancelFine" style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                取消微调
+                {{ $t('slightly.cancelFineTuning') }}
               </div>
-              <div class="fineTune boxinput" @click="hidenCancelFine" v-if="cancelFineStatus"
+              <div class="fineTune boxinput" @click="showOrHidenCancelFine(false)" v-if="cancelFineStatus"
                 style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                隐藏已取消的微调
+                {{ $t('slightly.hideCanceledFineTuning') }}
               </div>
-              <div class="fineTune boxinput" @click="showCancelFine" v-else
+              <div class="fineTune boxinput" @click="showOrHidenCancelFine(true)" v-else
                 style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                显示已取消的微调
+                {{ $t('slightly.showCanceledFineTuning') }}
               </div>
               <div class="fineTune boxinput" @click="deleteFine" style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                删除微调模型
+                <span class="iconfont icon-shanchu" style="color: #fff; margin-right:10px;"></span>
+                {{ $t('slightly.deleteFineTuningModel') }}
               </div>
               <div class="fineTune boxinput" @click="showFineSetting = !showFineSetting"
                 style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                创建微调
+                {{ $t('slightly.createFineTuning') }}
               </div>
               <el-collapse-transition>
                 <div v-show="showFineSetting">
                   <div class="block">
-                    <el-tooltip class="item" effect="dark" content="包含训练数据的文件ID" placement="top">
-                      <span class="demonstration" style="">trainingFile<span style="color: red;">*</span></span>
+                    <el-tooltip class="item" effect="dark" :content="$t('slightly.fileIDTrainingData')" placement="top">
+                      <span class="demonstration">trainingFile<span style="color: red;">*</span></span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.training_file" placeholder="训练数据的文件ID" />
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.training_file"
+                      :placeholder="$t('placeholder.trainingDataFileID')" />
                   </div>
 
-
                   <div class="block">
-                    <el-tooltip class="item" effect="dark" content="包含验证数据的文件ID" placement="top">
+                    <el-tooltip class="item" effect="dark" :content="$t('slightly.fileIDValidationData')" placement="top">
                       <span class="demonstration" style="">validationFile</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.validation_file" placeholder="验证数据文件ID" />
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.validation_file"
+                      :placeholder="$t('placeholder.validationDataFileID')" />
                   </div>
 
                   <div class="block">
-                    <el-tooltip class="item" effect="dark" content="您可以选择ada、babbage、curie、davinci或者是你自己通过微调训练的模型名称"
-                      placement="top">
-                      <span class="demonstration" style="">model</span>
+                    <el-tooltip class="item" effect="dark" :content="$t('slightly.modelOptions')" placement="top">
+                      <span class="demonstration">model</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.model" placeholder="模型名称" />
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.model"
+                      :placeholder="$t('placeholder.modelName')" />
                   </div>
 
                   <div class="block">
-                    <el-tooltip class="item" effect="dark" content="通过调整n_epochs的数量，可以控制模型的训练时期和训练次数，从而影响模型的性能和收敛速度"
-                      placement="top">
-                      <span class="demonstration" style="">nEpochs</span>
+                    <el-tooltip class="item" effect="dark" :content="$t('slightly.epochs')" placement="top">
+                      <span class="demonstration">nEpochs</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.n_epochs" placeholder="训练次数" />
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.n_epochs" type="number"
+                      :placeholder="$t('placeholder.trainingIterations')" />
                   </div>
 
                   <div class="block">
-                    <el-tooltip class="item" effect="dark"
-                      content="较大的 batch_size可以加快模型的训练速度、模型的稳定性和泛化能力，较小的 batch_size 可以减少内存和计算资源的使用、提高模型在测试数据上的性能"
-                      placement="top">
-                      <span class="demonstration" style="">batchSize</span>
+                    <el-tooltip class="item" effect="dark" :content="$t('slightly.batchSize')" placement="top">
+                      <span class="demonstration">batchSize</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.batch_sizeStr" placeholder="每批数据的大小" />
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.batch_size" type="number"
+                      :placeholder="$t('placeholder.batchSize')" />
                   </div>
 
                   <div class="block">
-                    <el-tooltip class="item" effect="dark"
-                      content="可以控制微调训练期间使用的学习率是预训练模型使用的学习率的多少倍。例如，如果您设置为2.0，则微调训练期间使用的学习率将是预训练模型使用的学习率的两倍。"
-                      placement="top">
-                      <span class="demonstration" style="">learningRateMultiplier</span>
+                    <el-tooltip class="item" effect="dark" :content="$t('slightly.learningRate')" placement="top">
+                      <span class="demonstration">learningRateMultiplier</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.learning_rate_multiplier" placeholder="学习率" />
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.learning_rate_multiplier" type="number"
+                      :placeholder="$t('placeholder.learningRate')" />
                   </div>
 
-                  <div class="block">
+                  <!-- <div class="block">
                     <el-tooltip class="item" effect="dark" content="分类任务中的类数,此参数对于多类分类是必需的" placement="top">
                       <span class="demonstration" style="">classificationNClasses</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.classification_n_classes"
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.classification_n_classes" type="number"
                       placeholder="分类任务中的类数" />
                   </div>
 
@@ -405,7 +451,7 @@
                       <span class="demonstration" style="">classificationPositiveClass</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.classification_positive_class"
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.classification_positive_class"  type="text"
                       placeholder="二元分类中的正类" />
                   </div>
 
@@ -415,20 +461,20 @@
                       <span class="demonstration" style="">classificationBetas</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.classification_betas" placeholder="分类贝塔" />
-                  </div>
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.classification_betas" placeholder="分类贝塔" type="text" />
+                  </div> -->
 
                   <div class="block">
-                    <el-tooltip class="item" effect="dark" content="最多 40 个字符的字符串，将添加到微调的模型名称中。" placement="top">
+                    <el-tooltip class="item" effect="dark" :content="$t('slightly.fineTunedName')" placement="top">
                       <span class="demonstration" style="">suffix</span>
                     </el-tooltip>
 
-                    <input class="weitiao" v-model="SettingInfo.fineTunes.suffix" placeholder="后缀" />
+                    <input class="weitiao" v-model="SettingInfo.fineTunes.suffix"
+                      :placeholder="$t('placeholder.ftsuffix')" />
                   </div>
 
                   <div class="block">
-                    <el-tooltip class="item" effect="dark"
-                      content="设置较高的值，那么模型在生成文本时会更加注重提示，设置较低的值模型则会更加注重自己的语言模型，生成更自由的文本" placement="top">
+                    <el-tooltip class="item" effect="dark" :content="$t('slightly.promptAttention')" placement="top">
                       <span class="demonstration" style="">promptLossWeight</span>
                     </el-tooltip>
 
@@ -436,7 +482,7 @@
                       :max="1" style="width: 95%;"></el-slider>
                   </div>
 
-
+                  <!-- 
                   <div class="block">
                     <el-tooltip class="item" effect="dark" content="用于确定是否在训练过程中计算分类特定的指标，例如准确率和F-1分数,可以在结果文件中查看这些指标."
                       placement="top">
@@ -446,11 +492,11 @@
                       <el-switch v-model="SettingInfo.fineTunes.compute_classification_metrics" :width="defaulWidth"
                         style="margin-top: 15px;margin-left: 35%;"></el-switch>
                     </div>
-                  </div>
+                  </div> -->
 
                   <div class="fineTune boxinput" @click="createFine"
                     style="margin-left: 0px;margin-right: 0px;width: 99%; background-color: #409EFF;">
-                    创建
+                    {{ $t('slightly.create') }}
                   </div>
                 </div>
               </el-collapse-transition>
@@ -460,10 +506,10 @@
           <!--文件-->
           <el-collapse-transition>
             <div v-show="SettingStatus == 4">
-              <div class="fineTune boxinput" @click="uploadFile" style="margin-left: 0px;margin-right: 0px;width: 99%;"> 
+              <div class="fineTune boxinput" @click="uploadFile" style="margin-left: 0px;margin-right: 0px;width: 99%;">
                 <input type="file" ref="fileInput" style="display: none;" @change="onFileChange">
-                <svg t="1679458974300" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                  p-id="1590" width="30" height="30">
+                <svg t="1679458974300" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                  xmlns="http://www.w3.org/2000/svg" p-id="1590" width="30" height="30">
                   <path
                     d="M567.466667 634.325333v234.666667a21.333333 21.333333 0 0 1-21.333334 21.333333h-42.666666a21.333333 21.333333 0 0 1-21.333334-21.333333v-234.666667H413.866667a8.533333 8.533333 0 0 1-6.826667-13.653333l110.933333-147.925333a8.533333 8.533333 0 0 1 13.653334 0l110.933333 147.925333a8.533333 8.533333 0 0 1-6.826667 13.653333h-68.266666z"
                     fill="#ffffff" p-id="1591"></path>
@@ -471,16 +517,19 @@
                     d="M768 725.333333a128 128 0 0 0 38.613333-250.112l-39.850666-12.586666-14.506667-39.253334a256.128 256.128 0 0 0-480.554667 0l-14.464 39.253334-39.850666 12.586666A128.085333 128.085333 0 0 0 256 725.333333a42.666667 42.666667 0 0 1 0 85.333334 213.333333 213.333333 0 0 1-64.341333-416.810667 341.461333 341.461333 0 0 1 640.682666 0A213.418667 213.418667 0 0 1 768 810.666667a42.666667 42.666667 0 0 1 0-85.333334z"
                     fill="#ffffff" p-id="1592"></path>
                 </svg>
-                上传文件
+                {{ $t('file.upload') }}
               </div>
               <div class="fineTune boxinput" @click="deleteOnFile" style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                删除文件
+                <span class="iconfont icon-shanchu" style="color: #fff; margin-right:10px;"></span>
+                {{ $t('file.delete') }}
               </div>
-              <div class="fineTune boxinput" @click="retrieveOnFile"  style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                查看文件
+              <div class="fineTune boxinput" @click="retrieveOnFile"
+                style="margin-left: 0px;margin-right: 0px;width: 99%;">
+                {{ $t('file.retrieve') }}
               </div>
-              <div class="fineTune boxinput" @click="retrieveOnFileContent"  style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                查看文件内容
+              <div class="fineTune boxinput" @click="retrieveOnFileContent"
+                style="margin-left: 0px;margin-right: 0px;width: 99%;">
+                {{ $t('file.view') }}
               </div>
             </div>
           </el-collapse-transition>
@@ -488,7 +537,7 @@
           <!--会话-->
           <el-collapse-transition>
             <div v-show="SettingStatus == 5">
-              <div class="fineTune boxinput" @click="newSession" style="margin-left: 0px;margin-right: 0px;width: 99%;">
+              <div class="session boxinput" @click="newSession">
                 <svg t="1679215361568" class="icon" viewBox="0 0 1024 1024" version="1.1"
                   xmlns="http://www.w3.org/2000/svg" p-id="3128" width="25" height="25">
                   <path
@@ -498,40 +547,44 @@
                     d="M716.801024 486.4a51.2 51.2 0 0 0-51.2 51.2 153.6 153.6 0 0 1-307.2 0 51.2 51.2 0 0 0-102.4 0 256 256 0 0 0 512 0 51.2 51.2 0 0 0-51.2-51.2z"
                     fill="#ffffff" p-id="3130"></path>
                 </svg>
-                创建会话
+                {{ $t('session.create') }}
               </div>
-              <div class="fineTune boxinput" @click="clearCurrentContext"
-                style="margin-left: 0px;margin-right: 0px;width: 99%;">
+              <!-- <div class="session boxinput" @click="clearCurrentContext">
                 清空当前会话内容
               </div>
-              <div class="fineTune boxinput" @click="exportObjArrToJson"
-                style="margin-left: 0px;margin-right: 0px;width: 99%;">
+              <div class="session boxinput" @click="exportObjArrToJson">
                 导出当前会话内容
               </div>
-              <div class="fineTune boxinput" @click="importFromJsonArr"
-                style="margin-left: 0px;margin-right: 0px;width: 99%;">
+              <div class="session boxinput" @click="importFromJsonArr">
                 导入当前会话内容
                 <input type="file" ref="onupdateJosnArr" @change="handleFileUpload" style="display: none;">
-              </div>
-              <div class="fineTune boxinput" @click="exportObjArrAllToJson"
+              </div> -->
+              <div class="session boxinput" @click="exportObjArrAllToJson"
                 style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                导出会话列表
+                <span class="iconfont icon-daochu" style="color: #fff; margin-right:10px;"></span>
+                {{ $t('session.export') }}
               </div>
-              <div class="fineTune boxinput" @click="importFromJsonArrAll"
-                style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                导入会话列表
+              <div class="session boxinput" @click="importFromJsonArrAll">
+                <span class="iconfont icon-daoru" style="color: #fff; margin-right:10px;"></span> {{ $t('session.import')
+                }}
                 <input type="file" ref="onupdateJosnArrAll" @change="handleFileUploadAll" style="display: none;">
               </div>
-              <div class="fineTune boxinput" @click="clearAllContext"
-                style="margin-left: 0px;margin-right: 0px;width: 99%;">
-                清除会话列表
+              <div class="session boxinput" @click="clearAllContext">
+                <span class="iconfont icon-qingchu" style="color: #fff; margin-right:10px;"></span>
+                {{ $t('session.clear') }}
               </div>
             </div>
           </el-collapse-transition>
 
-          <!--识图-->
+          <!--角色-->
           <el-collapse-transition>
             <div v-show="SettingStatus == 6">
+              <div class="block">
+                <input class="weitiao" v-model="roleSearch" :placeholder="$t('placeholder.role_name')" />
+              </div>
+              <div class="personList" v-for="roleInfo in roleList" :key="roleInfo.act" @click="roleClick(roleInfo)">
+                <RoleCard :roleInfo="roleInfo" :prCurrent="prCurrent"></RoleCard>
+              </div>
 
             </div>
           </el-collapse-transition>
@@ -539,12 +592,17 @@
           <!--界面设置-->
           <el-collapse-transition>
             <div v-show="SettingStatus == 7">
-              <div class="block">
+              <!-- <div class="block">
                 <el-tooltip class="item" effect="dark" content="将图片的url路径填入此处即可设置聊天背景。" placement="top">
                   <span class="demonstration">聊天背景</span>
                 </el-tooltip>
                 <input class="inputs" v-model="SettingInfo.contentImageUrl" placeholder="设置聊天界面的背景URL"
                   style="margin-top: 10px; width: 100%; margin-left: 0px;margin-right: 0px;" />
+              </div> -->
+              <div class="session boxinput" @click="changeLanguage"
+                style="margin-left: 0px;margin-right: 0px;width: 99%;">
+                <span class="iconfont icon-iconyuanbanben_fanyi" style="color: #fff; margin-right:10px;"></span>
+                {{ $t('setting.Language') }}
               </div>
 
             </div>
@@ -562,13 +620,15 @@ import Session from "@/components/Session.vue";
 import File from "@/components/File.vue";
 import ChatWindow from "./chatwindow.vue";
 import { AI_HEAD_IMG_URL } from '@/store/mutation-types'
-import { getModels, getMoneyInfo, getFineTunesList, getFilesList, uploadFile, createFineTune, cancelFineTune, deleteFineTuneModel,retrieveFineTune,deleteFile,retrieveFile,retrieveFileContent } from "@/api/getData";
-import { saveAs } from 'file-saver';
-import {  getNowTime, JCMFormatDate,JCMFormatTimestamp } from "@/util/util";
+import RoleCard from "@/components/RoleCard.vue";
+import { getModels, getMoneyInfo, getFineTunesList, getFilesList, uploadFile, createFineTune, cancelFineTune, deleteFineTuneModel, retrieveFineTune, deleteFile, retrieveFile, retrieveFileContent, getRoles } from "@/api/getData";
+
+import { getNowTime, JCMFormatDate, JCMFormatTimestamp } from "@/util/util";
 const { Configuration, OpenAIApi } = require("openai");
 export default {
   name: "App",
   components: {
+    RoleCard,
     PersonCard,
     ChatWindow,
     Session,
@@ -576,8 +636,8 @@ export default {
   },
   data() {
     return {
-      fileSearch:"",
-      sessionSearch:"",
+      fileSearch: "",
+      sessionSearch: "",
       showFineSetting: false,
       cancelFineStatus: true,
       storeStatus: 0,
@@ -593,43 +653,52 @@ export default {
         totalUsed: 0,
         totalAvailable: 0
       },
-
       batch_sizeStr: "",
       //全部的设置参数
       SettingInfo: {
-        readefile:false,
-        inputStatus:true,
+        cutSetting : 1,
+        KeyMsg: process.env.VUE_APP_OPENAI_API_KEY,
+        readefile: false,
+        inputStatus: true,
         translateEnglish: false,
         openProductionPicture: false,
         openChangePicture: false,
-        KeyMsg: process.env.VUE_APP_OPENAI_API_KEY,
-        MaxTokens: 1000,
-        Temperature: 1,
         TemperatureAudio: 0,
-        TopP: 1,
-        FrequencyPenalty: 0,
-        PresencePenalty: 0,
+
         n: 1,
         size: "256x256",
         language: "zh",
-        contentImageUrl: "",
+        chat: {
+          suffix: "",
+          MaxTokens: 1000,
+          Temperature: 1,
+          TopP: 1,
+          n: 1,
+          stream: true,
+          echo: false,
+          stop: "",
+          FrequencyPenalty: 0,
+          PresencePenalty: 0,
+        },
+        openNet: false,
+        max_results: 3,
         fineTunes: {
           training_file: "",
-          validation_file: undefined,
           model: "curie",
-          learning_rate_multiplier: undefined,
+          n_epochs: 4,
           prompt_loss_weight: 0.01,
-          compute_classification_metrics: false,
-          classification_n_classes: undefined,
-          classification_positive_class: undefined,
-          classification_betas: undefined,
           suffix: ""
+          // compute_classification_metrics: false,
+          // classification_betas:"",
+          // classification_positive_class:"",
         }
       },
       //当前点击的文件
       fiCurrent: "",
       //当前点击的模型
       pcCurrent: "",
+      //当前点击的角色
+      prCurrent: "",
       //当前点击的会话
       sessionCurrent: "",
       //当前点击的微调模型
@@ -638,10 +707,12 @@ export default {
       fineTuningSearch: "",
       //模型搜索数据
       modelSearch: "",
+      //角色搜索数据
+      roleSearch: "",
       //文件列表
       fileList: [],
       //文件缓存列表
-      fineTuningSearch:[],
+      fineTuningSearch: [],
       //微调模型列表
       fineTuningList: [],
       //微调模型缓存列表
@@ -650,6 +721,8 @@ export default {
       personList: [],
       //会话列表
       sessionList: [],
+      //角色列表
+      roleList: [],
       //模型列表缓存
       personListCache: [],
       //是否显示聊天窗口
@@ -679,7 +752,24 @@ export default {
       // 是否隐藏模型列表和功能设置选择列表
       showPersonList: true,
       showSetupList: true,
+      showMainContent: true,
+      firstSize: true,
+      width: 0
     };
+  },
+  computed: {
+    // 把获取setting列表的操作放到computed计算属性里来，这样才能动态绑定i18n的值
+    getSettings() {
+      return [{ name: this.$t('model.talk'), active: true },
+      { name: this.$t('image.title'), active: false },
+      { name: this.$t('audio.title'), active: false },
+      { name: this.$t('slightly.title.abbreviation'), active: false },
+      { name: this.$t('file.title'), active: false },
+      { name: this.$t('session.title'), active: false },
+      { name: this.$t('role.title'), active: false },
+      { name: this.$t('setting.title'), active: false }
+      ]
+    }
   },
   created() {
     window.addEventListener('resize', this.handleResize)
@@ -692,9 +782,9 @@ export default {
   mounted() {
     this.chatWindowInfo = {
       img: "",
-      name: "ChatGPT-3.5",
-      detail: "chatgpt v3.5 所基于的模型",
-      lastMsg: "chatgpt v3.5 所基于的模型",
+      name: "ChatGPT",
+      detail: this.$t('index.detail'),
+      lastMsg: this.$t('index.lastMsg'),
       id: "gpt-3.5-turbo",
       headImg: AI_HEAD_IMG_URL,
       showHeadImg: true
@@ -702,37 +792,112 @@ export default {
     if (this.SettingInfo.KeyMsg) {
       this.getModelList(this.SettingInfo.KeyMsg);
     }
-    // 在Vue实例中添加监听函数
-    this.$watch('SettingInfo.KeyMsg', this.watchKeyMsg);
-    this.$watch('SettingInfo.contentImageUrl', this.watchContentImageUrl);
-    this.$watch('modelSearch', this.watchModelSearch);
-    this.$watch('fineTuningSearch', this.watchFineTuningSearch);
+    this.getRolesList();
     this.$watch('fileSearch', this.watchFileSearch);
-    
-    this.$watch('SettingInfo.batch_sizeStr', this.batchSizeToInt);
-    this.$watch('SettingInfo.openChangePicture', this.watchOpenChangePicture);
-    this.$watch('SettingInfo.openProductionPicture', this.watchOpenProductionPicture);
   },
   filters: {
-    numFilterReservedSix(value) {
-      // 截取当前数据到小数点后两位
-      return parseFloat(value).toFixed(4)
+    // //截取数据到小数点后几位
+    // numFilterReserved(value, digit) {
+    //   return parseFloat(value).toFixed(digit)
+    // }
+  },
+  watch: {
+    modelSearch: {
+      handler: function (newVal, oldVal) {
+        if (this.personList) {
+          this.personList = this.personListCache.filter(person => person.id.includes(newVal))
+        } else {
+          this.personList = this.personListCache
+        }
+      }
     },
-    numFilterReservedTwo(value) {
-      // 截取当前数据到小数点后两位
-      return parseFloat(value).toFixed(2)
+    fineTuningSearch: {
+      handler: function (newVal, oldVal) {
+        if (this.fineTuningList) {
+          if (!this.cancelFineStatus) {
+            this.fineTuningList = this.fineTuningCacheList.filter(fineTunin => fineTunin.fineTunesStatus === "succeeded").filter(fineTuning => fineTuning.id.includes(newVal))
+          } else {
+            this.fineTuningList = this.fineTuningCacheList.filter(fineTuning => fineTuning.id.includes(newVal))
+          }
+        } else {
+          if (!this.cancelFineStatus) {
+            this.fineTuningList = this.fineTuningCacheList.filter(fineTunin => fineTunin.fineTunesStatus === "succeeded")
+          } else {
+            this.fineTuningList = this.fineTuningCacheList
+          }
+        }
+
+      }
+    },
+    fileSearch: {
+      handler: function (newVal, oldVal) {
+        if (this.fileList) {
+          this.fileList = this.fileCacheList.filter(fileList => fileList.id.includes(newVal))
+        } else {
+          this.fileList = this.fileCacheList
+        }
+      }
+    },
+    roleSearch: {
+      handler: function (newVal, oldVal) {
+        if (this.roleList) {
+          this.roleList = this.roleCacheList.filter(fileList => fileList.act.toLowerCase().includes(newVal.toLowerCase()))
+        } else {
+          this.roleList = this.roleCacheList
+        }
+      }
+    },
+    SettingInfo: {
+      handler: function (newVal, oldVal) {
+        if (newVal.openChangePicture) {
+          this.SettingInfo.openProductionPicture = false
+        }
+        if (newVal.openProductionPicture) {
+          this.SettingInfo.openChangePicture = false
+        }
+        if (newVal.fineTunes.batch_size) {
+          let batchSize = parseInt(newVal.fineTunes.batch_size)
+          this.SettingInfo.fineTunes.batch_size = batchSize
+        } else { }
+        if (newVal.fineTunes.validation_file) {
+          this.SettingInfo.fineTunes.validation_file = newVal.fineTunes.validation_file
+        }
+        if (newVal.fineTunes.learning_rate_multiplier) {
+          this.SettingInfo.fineTunes.learning_rate_multiplier = parseInt(newVal.fineTunes.learning_rate_multiplier)
+        }
+        if (newVal.KeyMsg && newVal !== oldVal) {
+          //获取模型列表
+          getModels(newVal).then((res) => {
+            this.personList = res;
+            this.personListCache = res;
+          }).catch(e => {
+            this.$message.error(this.$t('message.get_model_fail'))
+          })
+        }
+        // if (newVal.fineTunes.classification_n_classes) {
+        //   this.SettingInfo.fineTunes.classification_n_classes = parseInt(newVal.fineTunes.classification_n_classes)
+        // }
+      },
+      deep: true
     }
   },
   methods: {
-    //显示取消过的微调模型
-    showCancelFine() {
-      this.cancelFineStatus = true
-      this.fineTuningList=this.fineTuningCacheList
+    // 切换语言
+    changeLanguage() {
+      const lang = this.$i18n.locale === "zh" ? "en" : "zh";
+      localStorage.setItem("lang", lang);
+      this.$i18n.locale = lang;
     },
-    hidenCancelFine() {
-      this.cancelFineStatus = false
-      this.fineTuningList=this.fineTuningCacheList.filter(fineTunin=>fineTunin.fineTunesStatus==="succeeded")
+    //显示或者隐藏取消过的微调模型
+    showOrHidenCancelFine(status) {
+      this.cancelFineStatus = status
+      if (this.cancelFineStatus == true) {
+        this.fineTuningList = this.fineTuningCacheList
+      } else {
+        this.fineTuningList = this.fineTuningCacheList.filter(fineTunin => fineTunin.fineTunesStatus === "succeeded")
+      }
     },
+
     //导入会话列表触发的方法
     importFromJsonArrAll() {
       this.$refs.onupdateJosnArrAll.click(); // 触发选择文件的弹框
@@ -748,34 +913,13 @@ export default {
       };
       reader.readAsText(file);
     },
-    //导入当前内容json触发的方法
-    importFromJsonArr() {
-      this.$refs.onupdateJosnArr.click(); // 触发选择文件的弹框
-    },
-    handleFileUpload(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const fileContent = reader.result; // 文件内容
-        const parsed = JSON.parse(fileContent); // 转换为数组
-        this.$refs.chatWindow.assignmentMesList(parsed)
-      };
-      reader.readAsText(file);
-    },
     //导出所有会话到json文件
     exportObjArrAllToJson() {
       let jsonString = JSON.stringify(this.sessionList); // 将数组转为JSON字符串
       let blob = new Blob([jsonString], { type: "application/json;charset=utf-8" });
       saveAs(blob, "data.json");
     },
-    //导出当前会话到json文件
-    exportObjArrToJson() {
-      const mesList = this.$refs.chatWindow.getMesList()
-      let jsonString = JSON.stringify(mesList); // 将数组转为JSON字符串
-      let blob = new Blob([jsonString], { type: "application/json;charset=utf-8" });
-      saveAs(blob, "data.json");
-    },
+
     //清除所有的会话内容
     clearAllContext() {
       this.sessionList = []
@@ -788,10 +932,28 @@ export default {
     toggleLeft() {
       console.log("left clicked")
       this.showPersonList = !this.showPersonList;
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      if (isMobile && (this.showPersonList || this.showSetupList)) {
+        this.showMainContent = false;
+        this.showSetupList = !this.showPersonList;
+        document.querySelectorAll('.chatLeft')[0].style.width = '100%';
+      } else {
+        this.showMainContent = true;
+        document.querySelectorAll('.chatLeft')[0].style.width = '20%';
+      }
     },
     toggleRight() {
       console.log("right clicked")
       this.showSetupList = !this.showSetupList;
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      if (isMobile && (this.showPersonList || this.showSetupList)) {
+        this.showMainContent = false;
+        this.showPersonList = !this.showSetupList;
+        document.querySelectorAll('.chatLeft')[1].style.width = '100%';
+      } else {
+        this.showMainContent = true;
+        document.querySelectorAll('.chatLeft')[1].style.width = '20%';
+      }
     },
     //获取模型列表
     getModelList(key) {
@@ -803,28 +965,22 @@ export default {
           this.personList = models;
           this.personListCache = models;
         })
-        // console.log("auto click.")
-        // if (this.personList.length > 0) {
-        //   this.clickPerson(this.personList[0])
-        // }
         this.updateMoneyInfo()
       }).catch(e => {
-        this.$message({
-          message: "获取模型列表失败哦~",
-          type: "error",
-        });
+        // this.$message.error(this.$t('message.get_model_fail'))
       })
     },
     //获取微调模型列表
     getFineTunessList(key) {
       getFineTunesList(key).then((res) => {
-        this.fineTuningList = res
         this.fineTuningCacheList = res
+        if (this.cancelFineStatus == true) {
+          this.fineTuningList = this.fineTuningCacheList
+        } else {
+          this.fineTuningList = this.fineTuningCacheList.filter(fineTunin => fineTunin.fineTunesStatus === "succeeded")
+        }
       }).catch(e => {
-        this.$message({
-          message: "获取微调列表失败哦~",
-          type: "error",
-        });
+        this.$message.error(this.$t('message.get_model_fail'))
       })
     },
     //获取文件列表
@@ -833,21 +989,27 @@ export default {
         this.fileList = res
         this.fileCacheList = res
       }).catch(e => {
-        this.$message({
-          message: "获取文件列表失败哦~",
-          type: "error",
-        });
+        this.$message.error(this.$t('message.get_files_fail'))
       })
     },
-    //监听窗口尺寸的变化
-    handleResize() {
+    //获取角色列表
+    getRolesList() {
+      getRoles().then((res) => {
+        let data = res.data
+        this.roleList = data
+        this.roleCacheList = data
+      }).catch(e => {
+        this.$message.error(this.$t('message.get_roles_fail'))
+      })
+    },
+    resize(){
       if (window.innerWidth <= 1150) {
         this.showPersonList = false;
         this.showSetupList = false;
         this.showChatWindow = true;
         const info = {
           img: "",
-          name: "ChatGPT-3.5",
+          name: "ChatGPT",
           detail: "chatgpt v3.5 所基于的模型",
           lastMsg: "chatgpt v3.5 所基于的模型",
           id: "gpt-3.5-turbo",
@@ -859,97 +1021,19 @@ export default {
       } else {
         this.showPersonList = true;
         this.showSetupList = true;
-      };
-    },
-    watchBatchSizeToInt: function (newVal, oldVal) {
-      console.log("测试是是是")
-      if (newVal) {
-        this.SettingInfo.batchSize = parseInt(newVal)
       }
     },
-    // 监听openChangePicture属性的变化
-    watchOpenChangePicture: function (newVal, oldVal) {
-      if (newVal) {
-        this.SettingInfo.openProductionPicture = false
+    //监听窗口尺寸的变化
+    handleResize() {
+      if ( this.firstSize ){
+        this.resize();
+        this.firstSize = false;
+        this.width = window.innerWidth;
       }
-    },
-    watchOpenProductionPicture: function (newVal, oldVal) {
-      if (newVal) {
-        this.SettingInfo.openChangePicture = false
+      if ( this.width != window.innerWidth ){
+        this.resize();
+        this.width = window.innerWidth;
       }
-    },
-    // 监听contentImageUrl属性的变化
-    watchContentImageUrl: function (newVal, oldVal) {
-      if (newVal) {
-        this.$refs.chatWindow.updateContentImageUrl(newVal)
-      } else {
-        this.$refs.chatWindow.updateContentImageUrl("https://bpic.51yuansu.com/backgd/cover/00/31/39/5bc8088deeedd.jpg?x-oss-process=image/resize,w_780")
-      }
-    },
-    //监听fineTuningSearch属性的变化
-    watchFineTuningSearch:function (newVal, oldVal) {
-      if (this.fineTuningList.length !== 0) {
-        if(!this.cancelFineStatus){
-          this.fineTuningList = this.fineTuningCacheList.filter(fineTunin=>fineTunin.fineTunesStatus==="succeeded").filter(fineTuning => fineTuning.id.includes(newVal))
-        }else{
-          this.fineTuningList = this.fineTuningCacheList.filter(fineTuning => fineTuning.id.includes(newVal))
-        }
-      }
-      if (newVal == "") {
-        if(!this.cancelFineStatus){
-          this.fineTuningList = this.fineTuningCacheList.filter(fineTunin=>fineTunin.fineTunesStatus==="succeeded")
-        }else{
-          this.fineTuningList = this.fineTuningCacheList
-        }
-      }
-    },
-    //监听fileSearch属性的变化
-    watchFileSearch:function(newVal, oldVal) {
-      if (this.fileList.length !== 0) {
-        this.fileList = this.fileCacheList.filter(fileList => fileList.id.includes(newVal))
-      }
-      if (newVal == "") {
-        this.fileList = this.fileCacheList
-      }
-    },
-    // 监听modelSearch属性的变化
-    watchModelSearch: function (newVal, oldVal) {
-      if (this.personList.length !== 0) {
-        this.personList = this.personListCache.filter(person => person.id.includes(newVal))
-      }
-      if (newVal == "") {
-        this.personList = this.personListCache
-      }
-    },
-    // 监听KeyMsg属性的变化
-    watchKeyMsg: function (newVal, oldVal) {
-      //获取模型列表
-      getModels(newVal).then((res) => {
-        //保存OpenAI key到session中
-        this.personList = res;
-        this.personListCache = res;
-        //获取余额信息
-        getMoneyInfo(newVal).then((res) => {
-          this.moneryInfo.totalGranted = res.total_granted;
-          this.moneryInfo.totalUsed = res.total_used;
-          this.moneryInfo.totalAvailable = res.total_available;
-        });
-      }).catch(e => {
-        this.$message({
-          message: "获取模型列表失败哦~",
-          type: "error",
-        });
-      })
-    },
-    // 更新当前余额
-    updateMoneyInfo() {
-      getMoneyInfo(this.SettingInfo.KeyMsg).then((res) => {
-        this.$nextTick(() => {
-          this.moneryInfo.totalGranted = res.total_granted;
-          this.moneryInfo.totalUsed = res.total_used;
-          this.moneryInfo.totalAvailable = res.total_available;
-        })
-      })
     },
     //创建会话
     newSession() {
@@ -992,34 +1076,51 @@ export default {
       this.fineTuningInfo = {};
       this.SettingStatus = 0
       this.cutSetting = 0
-      this.showChatWindow = false;
+      this.SettingInfo.cutSetting = 0
+      // this.showChatWindow = false;
     },
     //会话列表被点击
     sessionClick() {
+      //清除当前点击的状态
       this.clearCurrent()
       this.SettingStatus = 5
       this.cutSetting = 1
+      this.SettingInfo.cutSetting = 1
       this.chatWindowInfo = {
         img: "",
-        name: "ChatGPT-3.5",
+        name: "ChatGPT",
         detail: "chatgpt v3.5 所基于的模型",
         lastMsg: "chatgpt v3.5 所基于的模型",
         id: "gpt-3.5-turbo",
         headImg: AI_HEAD_IMG_URL,
         showHeadImg: true
       }
-      this.showChatWindow = true;
+      // this.showChatWindow = true;
+    },
+    //角色列表被点击
+    roleClick(info) {
+      if (!this.showChatWindow) {
+        this.$message({
+          message: "请选一个模型",
+          type: "error",
+        });
+      } else {
+        var chatWindow = this.$refs.chatWindow;
+        chatWindow.inputMsg = info.prompt;
+      }
+
     },
     //微调模型列表被点击
     fineTuningClick() {
       this.clearCurrent()
       this.SettingStatus = 3;
       this.cutSetting = 2
-      this.showChatWindow = false;
+      this.SettingInfo.cutSetting = 2
+      // this.showChatWindow = false;
       //获取微调模型列表
       this.getFineTunessList(this.SettingInfo.KeyMsg)
     },
-    clearCurrent(){
+    clearCurrent() {
       //清除当前选择的模型微调模型
       this.ftCurrent = ""
       //清除当前选择的模型
@@ -1027,7 +1128,7 @@ export default {
       //清除当前选择的会话
       this.sessionCurrent = "";
       //清除当前选择的文件
-      this.fiCurrent= "";
+      this.fiCurrent = "";
     },
     //文件列表被点击
     fileClick() {
@@ -1036,6 +1137,7 @@ export default {
       this.fineTuningInfo = {};
       this.SettingStatus = 4;
       this.cutSetting = 3
+      this.SettingInfo.cutSetting = 3
       //获取微调模型列表
       this.getFilessList(this.SettingInfo.KeyMsg)
     },
@@ -1049,10 +1151,7 @@ export default {
       const file = e.target.files[0];
       // 验证文件类型是否为jsonl格式
       if (!file.name.endsWith('.jsonl')) {
-        this.$message({
-          message: "请上传一个有效的JSONL文件~",
-          type: "warning",
-        });
+        this.$message.warning(this.$t('message.valid_json'))
         return;
       }
       // 通过验证后，上传文件
@@ -1060,61 +1159,59 @@ export default {
       formData.append("file", file);
       formData.append("purpose", "fine-tune");
       uploadFile(formData, this.SettingInfo.KeyMsg).then((res) => {
-        this.$copy(res.id, "文件已上传成功,文件ID是" + res.id + ",已经帮您复制啦~")
+        this.$copy(res.id, this.$t('index.up_file_id') + res.id + this.$t('index.copy'))
         //更新文件列表
         this.getFilessList(this.SettingInfo.KeyMsg)
       })
     },
     //检索文件信息
-    retrieveOnFile(){
+    retrieveOnFile() {
       if (!this.fileInfo || !this.fileInfo.fileId) {
-        this.$message.error("只能检索文件哦~")
+        this.$message.error(this.$t('message.only_file'))
       } else {
         retrieveFile(this.fileInfo.fileId, this.SettingInfo.KeyMsg).then((res) => {
-          let context="`文件ID:`"+res.id+"  \n"
-                  +"`文件名称:`"+res.filename+"  \n"
-                  +"`文件大小:`"+(res.bytes/1024/1024).toFixed(2)+"MB \n"
-                  +"`对象:`"+res.object+"  \n"
-                  +"`状态:`"+res.status+"  \n"
-                  +"`状态描述`"+res.status_details+"  \n"
-                  +"`目的` "+res.purpose+" \n"
-                  +"`文件创建时间`"+JCMFormatTimestamp(res.created_at);
+          let context = this.$t('index.file_id') + res.id + "  \n"
+            + this.$t('index.file_name') + res.filename + "  \n"
+            + this.$t('index.file_size') + (res.bytes / 1024 / 1024).toFixed(2) + "MB \n"
+            + this.$t('index.obj') + res.object + "  \n"
+            + this.$t('index.status') + res.status + "  \n"
+            + this.$t('index.status_des') + res.status_details + "  \n"
+            + this.$t('index.target') + res.purpose + " \n"
+            + this.$t('index.file_time') + JCMFormatTimestamp(res.created_at);
           let retrieveFineTuneMsg = {
             headImg: AI_HEAD_IMG_URL,
             name: res.filename,
             time: JCMFormatDate(getNowTime()),
             msg: context,
-            chatType: 0, 
-            uid: res.id, 
+            chatType: 0,
+            uid: res.id,
           };
           this.$refs.chatWindow.sendMsg(retrieveFineTuneMsg)
           console.log(res)
         }).catch(e => {
-          this.$message.error("文件检索失败了~")
+          this.$message.error(this.$t('message.fail_file'))
         })
       }
     },
     //检索文件内容
-    async retrieveOnFileContent(){
+    async retrieveOnFileContent() {
       if (!this.fileInfo || !this.fileInfo.fileId) {
-        this.$message.error("只能检索文件内容哦~")
+        this.$message.error(this.$t('message.only_file'))
       } else {
-        try{
+        try {
           const configuration = new Configuration({
-            apiKey:  this.SettingInfo.KeyMsg,
+            apiKey: this.SettingInfo.KeyMsg,
           });
           const openai = new OpenAIApi(configuration);
           const response = await openai.downloadFile(this.fileInfo.fileId);
-        }catch(e){
-          this.$message.error("OpenAI为了减少滥用，免费帐户将无法下载微调训练的文件~")
+        } catch (e) {
+          this.$message.error(this.$t('message.openai_free'))
         }
       }
     },
     //模型被点击
     clickPerson(info) {
       this.storeStatus = 0;
-      //显示当前聊天窗口
-      this.showChatWindow = true;
       //传入当前聊天窗口信息
       this.chatWindowInfo = info;
       //设置当前被点击的对象
@@ -1130,8 +1227,6 @@ export default {
     //微调模型被点击
     clickFineTuning(info) {
       this.storeStatus = 1;
-      //显示当前聊天窗口
-      this.showChatWindow = true;
       //传入当前聊天窗口信息
       this.chatWindowInfo = info;
       //设置当前被点击的对象
@@ -1148,143 +1243,138 @@ export default {
         lastMsg: info.lastMsg,
         id: info.id
       }
-      this.fiCurrent=info.fileId
-      this.fileInfo=info
-      //显示当前聊天窗口
-      this.showChatWindow = true;
-      
-      this.$refs.chatWindow.updateInputsStatus(false)
+      this.fiCurrent = info.fileId
+      this.fileInfo = info
     },
     //删除文件
-    deleteOnFile(){
+    deleteOnFile() {
       if (!this.fileInfo || !this.fileInfo.fileId) {
-        this.$message.error("只能删除文件哦~")
+        this.$message.error(this.$t('message.only_del_file'))
       } else {
         deleteFile(this.fileInfo.fileId, this.SettingInfo.KeyMsg).then((res) => {
-          this.$message.success("恭喜您删除成功~")
+          this.$message.success(this.$t('message.del_file_succ'))
           this.getFilessList(this.SettingInfo.KeyMsg)
         }).catch(e => {
-          this.$message.error("文件删除失败了~")
+          this.$message.error(this.$t('message.del_fail'))
         })
       }
     },
     //创建微调
     createFine() {
       createFineTune(this.SettingInfo.fineTunes, this.SettingInfo.KeyMsg).then((res) => {
-        this.$message.success("恭喜您微调创建成功~")
+        this.$message.success(this.$t('message.create_succ'))
         this.getFineTunessList(this.SettingInfo.KeyMsg)
       }).catch(e => {
-        this.$message.error("微调创建失败了...")
+        this.$message.error(this.$t('message.create_fail'))
       })
     },
     //删除微调
     deleteFine() {
       if (!this.fineTuningInfo || !this.fineTuningInfo.fineTunesId) {
-        this.$message.error("只能删除微调中的模型哦~")
+        this.$message.error(this.$t('message.only_del_model'))
       } else {
         deleteFineTuneModel(this.fineTuningInfo.name, this.SettingInfo.KeyMsg).then((res) => {
-          this.$message.success("恭喜您微调模型删除成功~")
-          console.log(res)
+          this.$message.success(this.$t('message.del_model_succ'))
           this.getFineTunessList(this.SettingInfo.KeyMsg)
         }).catch(e => {
-          this.$message.error("微调模型删除失败了,模型正在训练中或者中途已取消")
+          this.$message.error(this.$t('message.del_fail_ing'))
         })
       }
     },
     //取消微调
     cancelFine() {
       if (!this.fineTuningInfo || !this.fineTuningInfo.fineTunesId || this.fineTuningInfo.fineTunesStatus === "succeeded") {
-        this.$message.error("只能取消进行训练中的微调模型哦~")
+        this.$message.error(this.$t('message.only_cancel'))
       } else {
         console.log(this.fineTuningInfo.fineTunesId)
         cancelFineTune(this.fineTuningInfo.fineTunesId, this.SettingInfo.KeyMsg).then((res) => {
-          this.$message.success("成功取消此模型~")
+          this.$message.success(this.$t('message.cancel_succ'))
           this.getFineTunessList(this.SettingInfo.KeyMsg)
         }).catch(e => {
           console.log(e)
-          this.$message.error("取消微调模型失败~")
+          this.$message.error(this.$t('message.cancel_fail'))
         })
       }
     },
     //检索微调
-    retrieveFine(){
+    retrieveFine() {
       if (!this.fineTuningInfo || !this.fineTuningInfo.fineTunesId) {
-        this.$message.error("只能检索的微调模型哦~")
+        this.$message.error(this.$t('message.only_model'))
       } else {
         console.log(this.fineTuningInfo.fineTunesId)
         retrieveFineTune(this.fineTuningInfo.fineTunesId, this.SettingInfo.KeyMsg).then((res) => {
-          let context="`微调任务ID:`"+res.id+"  \n"
-                  +"`任务类型:`"+res.object+"  \n"
-                  +"`模型的类型:`"+res.model+"  \n"
-                  +"`微调任务的创建时间:`"+JCMFormatTimestamp(res.created_at)+"  \n"
-                  +"`微调的事件列表`  \n"
-                  +"| 对象 | 日志级别 | 信息 | 创建时间  |\n"
-                  +"| :------: | :------: | :------: | :------: |\n";
+          let context = this.$t('index.task_id') + res.id + "  \n"
+            + this.$t('index.task_type') + res.object + "  \n"
+            + this.$t('index.model_type') + res.model + "  \n"
+            + this.$t('index.task_time') + JCMFormatTimestamp(res.created_at) + "  \n"
+            + this.$t('index.task_list')
+            + this.$t('index.obj_log_info_time')
+            + "| :------: | :------: | :------: | :------: |\n";
           res.events.forEach(obj => {
-            context += `| ${obj.object} | ${obj.level} | ${obj.message} | ${ JCMFormatTimestamp(obj.created_at) } |\n`;
+            context += `| ${obj.object} | ${obj.level} | ${obj.message} | ${JCMFormatTimestamp(obj.created_at)} |\n`;
           });
-          context +="\n `微调的模型ID:`"+ res.fine_tuned_model 
-                  +"\n\n `微调使用的参数:` \n"
-                  +"| 属性 | 设置的值 | \n"
-                  +"| :------: | :------: | \n";
+          context += this.$t('index.model_id') + res.fine_tuned_model
+            + this.$t('index.args')
+            + this.$t('index.item_setting')
+            + "| :------: | :------: | \n";
           for (let prop in res.hyperparams) {
             if (res.hyperparams.hasOwnProperty(prop)) {
               context += `| ${prop} | ${res.hyperparams[prop]} |\n`;
             }
           }
-         context+="\n`用户所属组:`"+res.organization_id;
+          context += this.$t('index.user_group') + res.organization_id;
 
-         if(res.result_files.length==0){
-            context+="\n\n`训练结果文件列表:没有`\n\n"
-         }else{
-            context+="\n\n`训练结果文件列表:`\n\n"
-                  +"| ID  | 文件名称 | 文件大小 |   对象 | 状态 |    \n"
-                  +"| :------: | :------: | :------: | :------: | :------: | \n";
+          if (res.result_files.length == 0) {
+            context += this.$t('index.results_null')
+          } else {
+            context += this.$t('index.results')
+              + this.$t('index.table_head')
+              + "| :------: | :------: | :------: | :------: | :------: | \n";
             res.result_files.forEach(obj => {
-              context += `| ${obj.id} | ${obj.filename}  | ${(obj.bytes/1024/1024).toFixed(2)+"MB"} | ${obj.object} | ${obj.status} |  \n`;
-            });   
-         }
-          context+="\n`状态:`"+res.status+"\n";
+              context += `| ${obj.id} | ${obj.filename}  | ${(obj.bytes / 1024 / 1024).toFixed(2) + "MB"} | ${obj.object} | ${obj.status} |  \n`;
+            });
+          }
+          context += this.$t('index.statu') + res.status + "\n";
 
-          if(res.training_files.length==0){
-            context+="\n\n`训练的文件列表:没有`\n\n"
-          }else{
-            context+="\n\n`训练的文件列表:`\n\n"
-                  +"| ID  | 文件名称 | 文件大小 |   对象 | 状态 |  \n"
-                  +"| :------: | :------: | :------: | :------: | :------: | \n";
+          if (res.training_files.length == 0) {
+            context += this.$t('index.files_null')
+          } else {
+            context += this.$t('index.files')
+              + this.$t('index.table_head')
+              + "| :------: | :------: | :------: | :------: | :------: | \n";
             res.training_files.forEach(obj => {
-              context += `| ${obj.id} | ${obj.filename}  | ${(obj.bytes/1024/1024).toFixed(2)+"MB"} | ${obj.object} | ${obj.status} |  \n`;
-            }); 
+              context += `| ${obj.id} | ${obj.filename}  | ${(obj.bytes / 1024 / 1024).toFixed(2) + "MB"} | ${obj.object} | ${obj.status} |  \n`;
+            });
           }
-          if(res.validation_files.length==0){
-            context+="\n\n`验证的文件列表:没有`\n\n"
-          }else{
-            context+="\n\n`验证的文件列表:`\n\n"
-            +"| ID  | 文件名称 | 文件大小 |   对象 | 状态 |  \n"
-             +"| :------: | :------: | :------: | :------: | :------: | \n";
+          if (res.validation_files.length == 0) {
+            context += this.$t('index.verifys_null')
+          } else {
+            context += this.$t('index.verifys')
+              + this.$t('index.table_head')
+              + "| :------: | :------: | :------: | :------: | :------: | \n";
             res.validation_files.forEach(obj => {
-              context += `| ${obj.id} | ${obj.filename}  | ${(obj.bytes/1024/1024).toFixed(2)+"MB"} | ${obj.object} | ${obj.status} |  \n`;
-            }); 
+              context += `| ${obj.id} | ${obj.filename}  | ${(obj.bytes / 1024 / 1024).toFixed(2) + "MB"} | ${obj.object} | ${obj.status} |  \n`;
+            });
           }
-          context+="\n`最后更新时间戳:`"+JCMFormatTimestamp(res.updated_at);
-         let retrieveFineTuneMsg = {
+          context += this.$t('index.last_time') + JCMFormatTimestamp(res.updated_at);
+          let retrieveFineTuneMsg = {
             headImg: AI_HEAD_IMG_URL,
-            name: res.fine_tuned_model!==null?res.fine_tuned_model:res.id,
+            name: res.fine_tuned_model !== null ? res.fine_tuned_model : res.id,
             time: JCMFormatDate(getNowTime()),
             msg: context,
-            chatType: 0, 
-            uid: res.id, 
+            chatType: 0,
+            uid: res.id,
           };
           this.$refs.chatWindow.sendMsg(retrieveFineTuneMsg)
           console.log(res)
         }).catch(e => {
           console.log(e)
-          this.$message.error("检索微调模型失败~")
+          this.$message.error(this.$t('message.verify_model_fail'))
         })
       }
     },
     personCardSort(id) {
-      if (id !== this.personList[0].id) {
+      if (typeof this.personList[0] != 'undefined' && id !== this.personList[0].id) {
         console.log(id);
         let nowPersonInfo;
         for (let i = 0; i < this.personList.length; i++) {
@@ -1329,6 +1419,12 @@ export default {
 
 .top-right {
   right: 5px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .boxinput {
@@ -1398,6 +1494,24 @@ export default {
   border: 0;
   transition: 0.3s;
   box-shadow: 0px 0px 5px 0px rgb(84, 89, 110);
+
+  &:hover {
+    box-shadow: 0px 0px 10px 0px rgb(29, 144, 245);
+  }
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: rgb(66, 70, 86);
+  border: 0;
+  transition: 0.3s;
+  box-shadow: 0px 0px 5px 0px rgb(84, 89, 110);
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 99%;
 
   &:hover {
     box-shadow: 0px 0px 10px 0px rgb(29, 144, 245);
@@ -1494,7 +1608,7 @@ export default {
   display: flex;
 
   .chatLeft {
-    width: 280px;
+    width: 20%;
 
     .title {
       color: #fff;
@@ -1502,8 +1616,6 @@ export default {
     }
 
     .online-person {
-      margin-top: 10%;
-
       .onlin-text {
         margin-left: 20%;
         padding-left: 10px;
@@ -1532,7 +1644,7 @@ export default {
 
   .chatRight {
     flex: 1;
-    padding-right: 30px;
+    padding-right: 0px;
 
     .showIcon {
       position: absolute;
@@ -1547,6 +1659,13 @@ export default {
         font-size: 300px;
         // color: rgb(28, 30, 44);
       }
+    }
+  }
+}
+@media only screen and (min-width: 768px) { // 当屏幕宽度大于或等于768px时
+  .chatHome {
+    .chatRight {
+      padding-right: 30px;
     }
   }
 }
